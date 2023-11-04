@@ -14,11 +14,14 @@ results_default = 4
 # Number of search results when "expanded" option is selected
 results_expanded = 10
 
-def web_search(query: str, num_results: int = results_default) -> str:
-    """Useful for general internet search queries."""
-    print("Searching with query {0}...".format(query))
+# Function to perform web search with the selected number of results
+def web_search(query: str, use_expanded: bool = False) -> str:
+    num_results = results_expanded if use_expanded else results_default
+
+    print(f"Searching with query {query}... (Results: {num_results})")
     search_results = []
     search_response = []
+
     if not query:
         return json.dumps(search_results)
 
@@ -30,10 +33,10 @@ def web_search(query: str, num_results: int = results_default) -> str:
 
     elif CFG.search_api == "googleSerp":
         return serp_web_search(os.environ["SERP_API_KEY"], query, num_results)
-    
+
     elif CFG.search_api == "googleAPI":
         return google_web_search(os.environ["GOOGLE_API_KEY"], os.environ["GOOGLE_CX"], query, num_results)
-    
+
     elif CFG.search_api == "searx":
         searx = SearxSearchWrapper(searx_host=os.environ["SEARX_URL"])
         results = searx.results(query, num_results)

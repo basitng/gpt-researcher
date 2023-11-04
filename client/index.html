@@ -68,7 +68,7 @@
         </div>
         <div class="form-group">
             <label for="results_type" class="agent-question">Select results type:</label>
-            <input type="radio" name="results_type" id="standardResults" value="standard" required>
+            <input type="radio" name="results_type" id="standardResults" value="standard" required checked>
             <label for="standardResults">Standard</label>
             <input type="radio" name="results_type" id="expandedResults" value="expanded" required>
             <label for="expandedResults">Expanded</label>
@@ -81,6 +81,7 @@
                 <option value="outline_report">Outline Report</option>
             </select>
         </div>
+        <input type="hidden" name="use_expanded" value="false">
         <input type="submit" value="Research" class="btn btn-primary button-padding">
     </form>
 
@@ -108,10 +109,34 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
 <script src="/site/scripts.js"></script>
 <script>
-    // const btnChoose = document.getElementById('btnChoose');
+    // Add an event listener to the form
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Get the selected results type (standard or expanded)
+        const resultsType = document.querySelector('input[name="results_type"]:checked').value;
+
+        // Set the "use_expanded" input field based on the selected results type
+        const useExpandedInput = document.querySelector('input[name="use_expanded"]');
+        useExpandedInput.value = resultsType === 'expanded' ? 'true' : 'false';
+
+        // Call GPT Researcher function to start the research
+        GPTResearcher.startResearch();
+    });
+     // const btnChoose = document.getElementById('btnChoose');
     const btnShowAuto = document.getElementById('btnShowAuto');
     const autoAgentDiv = document.getElementById('autoAgentDiv');
     const agentChoices = document.getElementsByClassName('agent-choices');
+
+    /**
+    btnChoose.addEventListener('click', function () {
+        btnShowAuto.style.display = 'inline-block';
+        btnChoose.style.display = 'none';
+        autoAgentDiv.style.display = 'none';
+        agentChoices[0].style.display = 'flex';
+    });
+    **/
 
     btnShowAuto.addEventListener('click', function () {
         btnShowAuto.style.display = 'none';
